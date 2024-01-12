@@ -81,7 +81,7 @@ def main() -> int:
         table_columns = [cols[0] for cols in cursor.fetchall()][1:]
 
         print("Importing data...")
-        for _, record in df[columns].iloc[:10000].iterrows():
+        for _, record in df[columns].iterrows():
             insert_query = f"""
                 INSERT INTO data (
                     {", ".join(table_columns)}
