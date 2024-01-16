@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 import pandas as pd
 import numpy as np
-import zipfile
+import sys
 
 
 def get_database():
@@ -13,7 +13,7 @@ def get_database():
     return client["dvf"]
 
 
-if __name__ == "__main__":
+def main() -> int:
     database = get_database()
     print("Successfully connected to MongoDB server")
     collection = database["data"]
@@ -38,6 +38,11 @@ if __name__ == "__main__":
         if (i + 1) % 50_000 == 0:
             collection.insert_many(records)
             records.clear()
-            print(f"Inserting data: {i + 1}/{len(data)}")
+            print(f"Inserting data: {i + 1} / {len(data)}")
     collection.insert_many(records)
     print("All data successfully loaded")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
