@@ -27,11 +27,14 @@ def main() -> int:
     else:
         cursor = connection.cursor()
 
-        cursor.execute("CREATE DATABASE IF NOT EXISTS dvf")
-        cursor.execute("USE dvf")
-        cursor.execute("DROP TABLE IF EXISTS data")
-        create_table_query = """
-            CREATE TABLE data (
+        database_name = "dvf"
+        table_name = "data"
+
+        cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database_name}")
+        cursor.execute(f"USE {database_name}")
+        cursor.execute(f"DROP TABLE IF EXISTS {table_name}")
+        create_table_query = f"""
+            CREATE TABLE {table_name} (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 no_disposition INT,
                 date_mutation DATE,
@@ -91,12 +94,11 @@ def main() -> int:
             """
             record.replace(np.nan, None, inplace=True)
             cursor.execute(insert_query, tuple(record.values))
-
         connection.commit()
-        print("Done.")
+        print("Done")
 
         connection.close()
-        print("Connection closed.")
+        print("Connection closed")
         return 0
 
 
