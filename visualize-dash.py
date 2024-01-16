@@ -6,7 +6,10 @@ import plotly.express as px
 import pandas as pd
 import json
 
-filename = "data/mongodb.csv"
+
+filename = "data/cache.csv"
+database_name = "dvf"
+collection_name = "data"
 if os.path.exists(filename):
     print("Using cached data")
     df = pd.read_csv(filename, sep="|", header=0, low_memory=False)
@@ -17,8 +20,8 @@ else:
     )
     client = pymongo.MongoClient(connection_string)
     print("Successfully connected to MongoDB")
-    db = client["dvf"]
-    collection = db["data"]
+    db = client[database_name]
+    collection = db[collection_name]
     data = collection.find({})
     df = pd.DataFrame(data)
     df.to_csv(filename, sep="|", index=False)
@@ -53,7 +56,6 @@ with open("data/postal.geojson") as f:
 height = 700
 app = dash.Dash(__name__)
 
-# Plot the choropleth map
 dep_map = px.choropleth_mapbox(
     price_department,
     geojson=departments_geo_data,
@@ -61,7 +63,7 @@ dep_map = px.choropleth_mapbox(
     locations="Code departement",
     color="Prix m2",
     color_continuous_scale="Viridis",
-    range_color=(0, 5000),  # Adjusted range_color
+    range_color=(0, 5000),
     mapbox_style="carto-positron",
     zoom=4,
     center={"lat": 46.6031, "lon": 1.8883},
@@ -70,7 +72,6 @@ dep_map = px.choropleth_mapbox(
     height=height,
 )
 
-# Plot the choropleth map
 postal_map = px.choropleth_mapbox(
     price_postal,
     geojson=postal_geo_data,
@@ -78,7 +79,7 @@ postal_map = px.choropleth_mapbox(
     locations="Code postal",
     color="Prix m2",
     color_continuous_scale="Viridis",
-    range_color=(0, 5000),  # Adjusted range_color
+    range_color=(0, 5000),
     mapbox_style="carto-positron",
     zoom=4,
     center={"lat": 46.6031, "lon": 1.8883},
@@ -94,7 +95,7 @@ dep_total = px.choropleth_mapbox(
     locations="Code departement",
     color="total",
     color_continuous_scale="Viridis",
-    range_color=(values_min, values_min),  # Adjusted range_color
+    range_color=(values_min, values_min),
     mapbox_style="carto-positron",
     zoom=4,
     center={"lat": 46.6031, "lon": 1.8883},
