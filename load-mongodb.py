@@ -16,7 +16,7 @@ def get_database():
 
 def main() -> int:
     database = get_database()
-    print("Successfully connected to MongoDB server")
+    print("Successfully connected to MongoDB")
     collection = database[collection_name]
     collection.drop()
 
